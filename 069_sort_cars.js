@@ -24,27 +24,37 @@
 // 1 2 3 0
 
 function sortCars(s, e) {
-	var r = [];
-	var zp = s.indexOf(0);
+	var sp = new Array(s.length);
+	for (var i = 0; i < s.length; i++) sp[s[i]] = i;
 
-	while (e[zp] !== 0) {
-		var c = e[zp];
-		r.push(c);
-		oldZp = zp;
-		zp = s.indexOf(c);
-		s[zp] = 0;
-		s[oldZp] = c;
+	var ep = new Array(e.length);
+	for (var i = 0; i < e.length; i++) ep[e[i]] = i;
+
+	var v = new Array(s.length);
+	for (var i = 0; i < v.length; i++) v[i] = false;
+
+	var r = [];
+
+	var g = sp[0];
+	v[g] = true;
+	g = sp[e[g]];
+	while (g != sp[0]) {
+		r.push(s[g]);
+		v[g] = true;
+		g = sp[e[g]];
 	}
 
-	for (var i = 0; i < s.length; s++) {
-		if (s[i] !== e[i] && s[i] !== 0) {
-			var g = i;
-			var q = s[i];
-			do {
+	for (var i = 0; i < s.length; i++) {
+		if (!v[i] && s[i] != e[i]) {
+			r.push(s[i]);
+			v[i] = true;
+			g = sp[e[i]];
+			while (g != i) {
+				console.log(g);
 				r.push(s[g]);
-				g = s.indexOf(e[g]);
-				s[g] = e[g];
-			} while (g !== i);
+				v[g] = true;
+				g = sp[e[g]];
+			}
 			r.push(s[i]);
 		}
 	}
@@ -52,5 +62,26 @@ function sortCars(s, e) {
 	return r;
 }
 
-var r = sortCars([1, 2, 3, 0, 4, 5], [5, 1, 0, 3, 2, 4]);
-console.log(r);
+function printResult(s, l) {
+	console.log(l);
+	console.log('-------------');
+	console.log(s);
+	for (var i = 0; i < l.length; i++) {
+		var k = s.indexOf(l[i]);
+		var z = s.indexOf(0);
+		s[z] = s[k];
+		s[k] = 0;
+		console.log(s);
+	}
+}
+
+
+// var r = sortCars([1, 2, 3, 4, 0], [2, 1, 4, 3, 0]);
+// printResult([1, 2, 3, 4, 0], r);
+
+// var r = sortCars([1, 2, 3, 0, 4, 5], [5, 1, 0, 3, 2, 4]);
+// printResult([1, 2, 3, 0, 4, 5], r);
+
+var r = sortCars([6, 1, 2, 3, 0, 4, 5, 7], [7, 5, 1, 0, 3, 2, 4, 6]);
+printResult([6, 1, 2, 3, 0, 4, 5, 7], r);
+
